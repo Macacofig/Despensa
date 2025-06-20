@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     //For Hilt
-    alias(libs.plugins.hilt) // ✅ Plugin de Hilt
-    alias(libs.plugins.kapt)
+    //alias(libs.plugins.hilt) // ✅ Plugin de Hilt
+    //alias(libs.plugins.kapt)
 
 }
 
@@ -69,12 +69,14 @@ dependencies {
     implementation(project(":framework"))
 
     //Hilt
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.hilt.android) // Usa la última versión disponible
-    kapt(libs.hilt.compiler)
+    //implementation(libs.androidx.hilt.navigation.compose)
+    //implementation(libs.hilt.android) // Usa la última versión disponible
+    //kapt(libs.hilt.compiler)
 
+    //Nav
+    implementation(libs.navigation)
 }
 
-kapt {
-    correctErrorTypes = true
-}
+//kapt {
+//    correctErrorTypes = true
+//}

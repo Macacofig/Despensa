@@ -1,4 +1,6 @@
 package com.ucb.domain
 
-class Usuario {
-}
+data class Usuario (
+    val nombre: String,
+    val password: String
+)

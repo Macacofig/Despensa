@@ -1,4 +1,8 @@
 package com.ucb.domain
 
-class Producto {
-}
+data class Producto (
+    val nombreProducto : String,
+    val codigoProducto : String,
+    val cantidad : Int,
+    val usuario_id : Int
+)

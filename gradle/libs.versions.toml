@@ -19,6 +19,8 @@ room = "2.6.1"
 hiltAndroid = "2.55"
 hiltNavigationCompose = "1.2.0"
 
+#Nav
+navVersion = "2.8.3"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -51,6 +53,9 @@ room-compiler = { group="androidx.room", name="room-compiler", version.ref="room
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+#nav
+navigation = { group="androidx.navigation", name="navigation-compose", version.ref="navVersion"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
