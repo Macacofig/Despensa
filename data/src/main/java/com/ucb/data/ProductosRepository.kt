@@ -15,8 +15,8 @@ class ProductosRepository(
         this.localDataSource.UpdateProd(producto)
         return true
     }
-    suspend fun DeleteProd(codigoProdcuto: String): Boolean{
-        this.localDataSource.DeleteProd(codigoProdcuto)
+    suspend fun DeleteProd(codigoProducto: String): Boolean{
+        this.localDataSource.DeleteProd(codigoProducto)
         return true
     }
 }

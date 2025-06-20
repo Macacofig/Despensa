@@ -5,5 +5,5 @@ interface IProductosLocalDataSource {
     suspend fun SaveProd(producto: Producto): Boolean
     suspend fun GetProds(): List<Producto>
     suspend fun UpdateProd(producto: Producto): Boolean
-    suspend fun DeleteProd(codigoProdcuto: String): Boolean
+    suspend fun DeleteProd(codigoProducto: String): Boolean
 }

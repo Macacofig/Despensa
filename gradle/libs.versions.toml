@@ -14,6 +14,7 @@ jetbrainsKotlinJvm = "2.0.0"
 
 #room
 room = "2.6.1"
+ksp = "2.0.0-1.0.24"
 
 #hilt
 hiltAndroid = "2.55"
@@ -67,6 +68,9 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 #hilt
 kapt = { id = "org.jetbrains.kotlin.kapt"}
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+
+#room
+ksp = { id = "com.google.devtools.ksp", version.ref="ksp"}
 
 [bundles]
 room = [ "room-runtime", "room-ktx", "room-rxjava2","room-rxjava3", "room-guava", "room-paging"]
