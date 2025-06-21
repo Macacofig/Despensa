@@ -25,10 +25,22 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import android.widget.Toast
+import com.ucb.domain.Producto
 //colores
 val fondoGeneral = Color(0xFFB2EBF2)
 //val fondoTarjeta = Color(0xFFB2DFDB)
@@ -38,66 +50,94 @@ val fondoBoton = Color(0xFF00695C)
 
 @Composable
 fun AgregarUI(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: AgregarViewModel = hiltViewModel()
 ) {
-    var nombre by remember { mutableStateOf("") }
+    var nombreProducto by remember { mutableStateOf("") }
+    var codigoProducto by remember { mutableStateOf("") }
     var cantidad by remember { mutableStateOf("") }
-    var fecha by remember { mutableStateOf("") }
+    val usuarioId = 1 // ejemplo fijo, adapta según tu lógica
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(fondoGeneral)
-            .padding(40.dp),
-        contentAlignment = Alignment.Center
+            .padding(16.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "AGREGAR PRODUCTO",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                color = textoPrincipal,
-                modifier = Modifier.padding(bottom = 20.dp)
-            )
+            // Botón Back arriba a la izquierda
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Volver",
+                        tint = textoPrincipal
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "AGREGAR PRODUCTO",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = textoPrincipal
+                )
+            }
 
-            Text(
-                text = "Agrega Productos a tu inventario:",
-                color = Color.DarkGray,
-                modifier = Modifier.padding(bottom = 5.dp)
-            )
+            Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
-                value = nombre,
-                onValueChange = { nombre = it },
+                value = nombreProducto,
+                onValueChange = { nombreProducto = it },
                 label = { Text("Nombre del producto") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
+                value = codigoProducto,
+                onValueChange = { codigoProducto = it },
+                label = { Text("Código del producto") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
                 value = cantidad,
-                onValueChange = { cantidad = it },
+                onValueChange = { cantidad = it.filter { char -> char.isDigit() } }, // solo números
                 label = { Text("Cantidad") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(
-                value = fecha,
-                onValueChange = { fecha = it },
-                label = { Text("Fecha de vencimiento") },
-                placeholder = { Text("dd/mm/aaaa") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-
             Button(
-                onClick = { /* Acción vacía por ahora */ },
+                onClick = {
+                    val cantidadInt = cantidad.toIntOrNull() ?: 0
+                    if (nombreProducto.isNotBlank() && codigoProducto.isNotBlank() && cantidadInt > 0) {
+                        val producto = Producto(
+                            nombreProducto = nombreProducto,
+                            codigoProducto = codigoProducto,
+                            cantidad = cantidadInt,
+                            usuario_id = usuarioId
+                        )
+                        viewModel.guardarTV(producto)
+                        Toast.makeText(context, "Producto guardado", Toast.LENGTH_SHORT).show()
+                        // Limpiar campos si quieres:
+                        nombreProducto = ""
+                        codigoProducto = ""
+                        cantidad = ""
+                    } else {
+                        Toast.makeText(context, "Completa todos los campos correctamente", Toast.LENGTH_SHORT).show()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -108,9 +148,3 @@ fun AgregarUI(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun AgregarUIPreview() {
-//    AgregarUI(navController = rememberNavController())
-//}

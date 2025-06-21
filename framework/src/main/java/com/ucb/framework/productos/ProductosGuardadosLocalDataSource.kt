@@ -1,6 +1,7 @@
 package com.ucb.framework.productos
 
 import android.content.Context
+import androidx.room.util.copy
 import com.ucb.data.IProductosLocalDataSource
 import com.ucb.domain.Producto
 import com.ucb.framework.mappers.toDomain
@@ -13,6 +14,7 @@ class ProductosGuardadosLocalDataSource (
 ) : IProductosLocalDataSource{
 
     val productoDAO: IProductoGuardadoDao = AppRoomDatabase.getDatabase(context).prodDao()
+
     override suspend fun SaveProd(dispositivo: Producto): Boolean {
         productoDAO.insert(dispositivo.toEntity())
         return true
@@ -23,18 +25,19 @@ class ProductosGuardadosLocalDataSource (
     }
 
     override suspend fun UpdateProd(producto: Producto): Boolean {
-        val existente = productoDAO.findByCodigo(producto.codigoProducto)
-        return if (existente != null) {
-            val actualizado = existente.copy(
-                nombreProducto = producto.nombreProducto,
-                cantidad = producto.cantidad,
-                usuario_id = producto.usuario_id
-            )
-            productoDAO.UpdateProducto(actualizado)
-            true
-        } else {
-            false
-        }
+//        val existente = productoDAO.findByCodigo(producto.codigoProducto)
+//        return if (existente != null) {
+//            val actualizado = existente.copy(
+//                nombreProducto = producto.nombreProducto,
+//                cantidad = producto.cantidad,
+//                usuario_id = producto.usuario_id
+//            )
+//            productoDAO.UpdateProducto(actualizado)
+//            true
+//        } else {
+//            false
+//        }
+        return true
     }
 
     override suspend fun DeleteProd(codigoProducto: String): Boolean {
@@ -42,4 +45,8 @@ class ProductosGuardadosLocalDataSource (
         return true
     }
 
+    override suspend fun obtenerProductoCodigo(codigoProducto: String): Boolean {
+        val count = productoDAO.findByCodigo(codigoProducto)
+        return count > 0
+    }
 }

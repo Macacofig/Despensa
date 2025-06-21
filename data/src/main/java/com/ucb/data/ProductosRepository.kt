@@ -19,4 +19,7 @@ class ProductosRepository(
         this.localDataSource.DeleteProd(codigoProducto)
         return true
     }
+    suspend fun obtenerProductoCodigo(codigoProducto: String): Boolean{
+        return localDataSource.obtenerProductoCodigo(codigoProducto)
+    }
 }
