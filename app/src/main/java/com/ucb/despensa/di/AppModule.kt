@@ -7,7 +7,9 @@ import com.ucb.data.ProductosRepository
 import com.ucb.data.UsuariosRepository
 import com.ucb.framework.productos.ProductosGuardadosLocalDataSource
 import com.ucb.framework.usuarios.UsuariosGuardadosLocalDataSource
+import com.ucb.usecases.ActualizarProducto
 import com.ucb.usecases.BuscarProductoCodigo
+import com.ucb.usecases.EliminarProducto
 import com.ucb.usecases.GuardarProducto
 import com.ucb.usecases.ObtenerProductos
 import dagger.Module
@@ -61,5 +63,16 @@ class AppModule {
     @Singleton
     fun provideFindProducto(repository: ProductosRepository): BuscarProductoCodigo {
         return BuscarProductoCodigo(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideActualizarProducto(repository: ProductosRepository): ActualizarProducto {
+        return ActualizarProducto(repository)
+    }
+    @Provides
+    @Singleton
+    fun provideEliminarProducto(repository: ProductosRepository): EliminarProducto {
+        return EliminarProducto(repository)
     }
 }

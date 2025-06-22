@@ -48,7 +48,7 @@ fun AppNavigation() {
         }
         composable(screen.EditarScreen.route) {
             EditarUI(
-                onBackClick = { navController.popBackStack() },
+                //onBackClick = { navController.popBackStack() },
             )
         }
         composable(screen.EliminarScreen.route) {

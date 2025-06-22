@@ -20,15 +20,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-//import androidx.navigation.NavController
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.sp
-//import androidx.navigation.compose.rememberNavController
+import androidx.hilt.navigation.compose.hiltViewModel
 
 
 //colores
@@ -40,8 +42,13 @@ val textoTarjeta = Color(0xFF000000)
 
 @Composable
 fun EliminarUI(
+    viewModel: EliminarViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
+    val state by viewModel.stateD.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.cargarProductos()
+    }
 
     Box(
         modifier = Modifier
@@ -73,37 +80,66 @@ fun EliminarUI(
             )
 
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             ) {
-                items(2) { index ->
-                    val nombre = "Producto ${index + 1}"
-                    val cantidad = (5 - index) * 2
-                    val fecha = "01/07/2025"
+                when (val currentState = state) {
+                    is EliminarViewModel.PorductosStateD.MostrarD -> {
+                        val productos = currentState.productos
+                        items(productos.size) { index ->
+                            val producto = productos[index]
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                                colors = CardDefaults.cardColors(containerColor = fondoTarjeta),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        Text(text = "Nombre: ${producto.nombreProducto}", color = textoTarjeta)
+                                        Text(text = "Código: ${producto.codigoProducto}", color = textoTarjeta)
+                                        Text(text = "Cantidad: ${producto.cantidad}", color = textoTarjeta)
+                                    }
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(fondoTarjeta, shape = RoundedCornerShape(8.dp))
-                            .padding(16.dp)
-                    ) {
-                        Column {
-                            Text("Nombre: $nombre", fontWeight = FontWeight.Bold, color = textoTarjeta)
-                            Text("Cantidad: $cantidad", color = textoTarjeta)
-                            Text("Vence: $fecha", color = textoTarjeta)
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.eliminarProducto(producto.codigoProducto)
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "Eliminar",
+                                            tint = Color.Red
+                                        )
+                                    }
+                                }
+                            }
                         }
+                    }
 
-                        IconButton(
-                            onClick = { /* Visual, sin acción */ },
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .offset(x = (-8).dp, y = (8).dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Eliminar",
-                                tint = Color.Red
-                            )
+                    EliminarViewModel.PorductosStateD.NohayProductosD -> {
+                        item {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                                colors = CardDefaults.cardColors(containerColor = fondoTarjeta),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Text("No hay productos disponibles", color = textoTarjeta)
+                                }
+                            }
                         }
                     }
                 }
@@ -112,11 +148,7 @@ fun EliminarUI(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = {/*
-                    navController.navigate(screen.ProductosScreen.route) {
-                        popUpTo(screen.EliminarScreen.route) { inclusive = true }
-                    }*/
-                },
+                onClick = {onBackClick()},
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00796B)),
                 modifier = Modifier
                     .fillMaxWidth()

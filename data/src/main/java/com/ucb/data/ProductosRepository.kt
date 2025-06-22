@@ -11,12 +11,11 @@ class ProductosRepository(
     suspend fun GetProds(): List<Producto>{
         return localDataSource.GetProds()
     }
-    suspend fun UpdateProd(producto: Producto): Boolean{
-        this.localDataSource.UpdateProd(producto)
-        return true
+    suspend fun UpdateProd(producto: Producto) {
+        localDataSource.actualizarProducto(producto)
     }
     suspend fun DeleteProd(codigoProducto: String): Boolean{
-        this.localDataSource.DeleteProd(codigoProducto)
+        localDataSource.DeleteProd(codigoProducto)
         return true
     }
     suspend fun obtenerProductoCodigo(codigoProducto: String): Boolean{

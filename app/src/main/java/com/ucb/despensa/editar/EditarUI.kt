@@ -9,12 +9,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.collectAsState
 
 // Colores personalizados
 val fondoGeneral = Color(0xFFB2EBF2)
@@ -25,8 +23,15 @@ val textoTarjeta = Color(0xFF000000)
 
 @Composable
 fun EditarUI(
-    onBackClick: () -> Unit
+    viewModel: EditarViewModel = hiltViewModel(),
+    //onBackClick: () -> Unit
 ) {
+    val state = viewModel.stateE.collectAsState()
+
+    // Llamamos cargarProductos una sola vez al montar la UI
+    LaunchedEffect(Unit) {
+        viewModel.cargarProductos()
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -48,73 +53,67 @@ fun EditarUI(
             )
 
             Text(
-                text = "Edite solo la cantidad o fecha de vencimiento:",
+                text = "Actualice la cantidad en stock del producto ",
                 fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 color = Color.DarkGray,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Lista de productos visuales
-            repeat(2) { index ->
-                val nombre = "Producto ${index + 1}"
-                var cantidad by remember { mutableStateOf(TextFieldValue("")) }
-                var fecha by remember { mutableStateOf(TextFieldValue("")) }
+            when (val currentState = state.value) {
+                is EditarViewModel.ProductosStateE.MostrarE -> {
+                    val productos = currentState.productos
+                    productos.forEach { producto ->
+                        var cantidad by remember { mutableStateOf(producto.cantidad.toString()) }
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    colors = CardDefaults.cardColors(containerColor = fondoTarjeta),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "Nombre: $nombre",
-                            fontWeight = FontWeight.Bold,
-                            color = textoTarjeta
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        OutlinedTextField(
-                            value = cantidad,
-                            onValueChange = { cantidad = it },
-                            label = { Text("Cantidad") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        OutlinedTextField(
-                            value = fecha,
-                            onValueChange = { fecha = it },
-                            label = { Text("Fecha de Vencimiento") },
-                            placeholder = { Text("dd/mm/aaaa") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Button(
-                            onClick = {
-                                // Visual: no acción real
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = fondoBoton),
-                            modifier = Modifier.fillMaxWidth()
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            colors = CardDefaults.cardColors(containerColor = fondoTarjeta),
+                            shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Guardar Cambios", color = Color.White)
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    text = "Nombre: ${producto.nombreProducto}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = textoTarjeta
+                                )
+                                Text(
+                                    text = "Código: ${producto.codigoProducto}",
+                                    fontWeight = FontWeight.Medium,
+                                    color = textoTarjeta
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                OutlinedTextField(
+                                    value = cantidad,
+                                    onValueChange = { cantidad = it },
+                                    label = { Text("Cantidad") },
+                                    singleLine = true,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+                                Button(
+                                    onClick = {
+                                        val nuevaCantidad = cantidad.toIntOrNull() ?: producto.cantidad
+                                        viewModel.actualizarCantidad(producto.codigoProducto, nuevaCantidad)
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = fondoBoton),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Guardar Cambios", color = Color.White)
+                                }
+                            }
                         }
                     }
+                }
+
+                is EditarViewModel.ProductosStateE.NohayProductosE -> {
+                    Text("No hay productos para mostrar", color = textoPrincipal)
                 }
             }
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun EditarPreview() {
-//    EditarUI(navController = rememberNavController())
-//}

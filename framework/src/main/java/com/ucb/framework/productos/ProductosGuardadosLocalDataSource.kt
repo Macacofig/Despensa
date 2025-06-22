@@ -24,20 +24,8 @@ class ProductosGuardadosLocalDataSource (
         return entities.map { it.toDomain() }
     }
 
-    override suspend fun UpdateProd(producto: Producto): Boolean {
-//        val existente = productoDAO.findByCodigo(producto.codigoProducto)
-//        return if (existente != null) {
-//            val actualizado = existente.copy(
-//                nombreProducto = producto.nombreProducto,
-//                cantidad = producto.cantidad,
-//                usuario_id = producto.usuario_id
-//            )
-//            productoDAO.UpdateProducto(actualizado)
-//            true
-//        } else {
-//            false
-//        }
-        return true
+    override suspend fun actualizarProducto(producto: Producto) {
+        productoDAO.actualizarCantidadPorCodigo(producto.codigoProducto, producto.cantidad)
     }
 
     override suspend fun DeleteProd(codigoProducto: String): Boolean {
