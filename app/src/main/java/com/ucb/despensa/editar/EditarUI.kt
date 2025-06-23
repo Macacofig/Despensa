@@ -23,6 +23,8 @@ val textoTarjeta = Color(0xFF000000)
 
 @Composable
 fun EditarUI(
+    nombre: String,
+    password: String,
     viewModel: EditarViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
@@ -30,7 +32,7 @@ fun EditarUI(
 
     // Llamamos cargarProductos una sola vez al montar la UI
     LaunchedEffect(Unit) {
-        viewModel.cargarProductos()
+        viewModel.inicializar(nombre, password)
     }
     Box(
         modifier = Modifier

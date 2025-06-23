@@ -42,12 +42,14 @@ val textoTarjeta = Color(0xFF000000)
 
 @Composable
 fun EliminarUI(
+    nombre: String,
+    password: String,
     viewModel: EliminarViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
     val state by viewModel.stateD.collectAsState()
     LaunchedEffect(Unit) {
-        viewModel.cargarProductos()
+        viewModel.inicializar(nombre,password)
     }
 
     Box(

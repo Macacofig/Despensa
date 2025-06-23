@@ -73,10 +73,11 @@ fun AppNavigation() {
                 nombre = nombre,
                 password = password,
                 onAgregarClick = {
-                    navController.navigate(screen.AgregarScreen.createRoute(nombre, password))
-                },
-                onEditarClick = { navController.navigate(screen.EditarScreen.route) },
-                onEliminarClick = { navController.navigate(screen.EliminarScreen.route) }
+                    navController.navigate(screen.AgregarScreen.createRoute(nombre, password))},
+                onEditarClick = {
+                    navController.navigate(screen.EditarScreen.createRoute(nombre,password))},
+                onEliminarClick = {
+                    navController.navigate(screen.EliminarScreen.createRoute(nombre,password))}
             )
         }
 
@@ -97,13 +98,33 @@ fun AppNavigation() {
                 onBackClick = { navController.popBackStack() }
             )
         }
-        composable(screen.EditarScreen.route) {
+        composable(
+            route = screen.EditarScreen.route,
+            arguments = listOf(
+                navArgument("nombre") { type = NavType.StringType },
+                navArgument("password") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+            val password = backStackEntry.arguments?.getString("password") ?: ""
             EditarUI(
+                nombre = nombre,
+                password = password,
                 onBackClick = { navController.popBackStack() },
             )
         }
-        composable(screen.EliminarScreen.route) {
+        composable(
+            route = screen.EliminarScreen.route,
+            arguments = listOf(
+                navArgument("nombre") { type = NavType.StringType },
+                navArgument("password") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+            val password = backStackEntry.arguments?.getString("password") ?: ""
             EliminarUI(
+                nombre = nombre,
+                password = password,
                 onBackClick = { navController.popBackStack() },
             )
         }
