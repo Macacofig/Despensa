@@ -8,8 +8,8 @@ class ProductosRepository(
     suspend fun SaveProd(producto: Producto): Boolean{
         return localDataSource.SaveProd(producto)
     }
-    suspend fun GetProds(): List<Producto>{
-        return localDataSource.GetProds()
+    suspend fun GetProds(usuarioid: Int): List<Producto>{
+        return localDataSource.GetProds(usuarioid)
     }
     suspend fun UpdateProd(producto: Producto) {
         localDataSource.actualizarProducto(producto)

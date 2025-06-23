@@ -15,6 +15,6 @@ data class ProductoGuardado (
     @ColumnInfo(name = "cantidad")
     val cantidad : Int,
     @ColumnInfo(name = "usuario_id")
-    val usuario_id : Int
+    val usuario_id : Int?
 )
 

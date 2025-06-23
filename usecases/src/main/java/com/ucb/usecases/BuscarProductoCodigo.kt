@@ -1,7 +1,7 @@
 package com.ucb.usecases
 
 import com.ucb.data.ProductosRepository
-import com.ucb.domain.Producto
+
 class BuscarProductoCodigo (
     private val repository: ProductosRepository
 ){

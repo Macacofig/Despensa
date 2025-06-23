@@ -50,15 +50,20 @@ val fondoBoton = Color(0xFF00695C)
 
 @Composable
 fun AgregarUI(
+    nombre: String,
+    password: String,
     onBackClick: () -> Unit,
     viewModel: AgregarViewModel = hiltViewModel()
 ) {
     var nombreProducto by remember { mutableStateOf("") }
     var codigoProducto by remember { mutableStateOf("") }
     var cantidad by remember { mutableStateOf("") }
-    val usuarioId = 1 // ejemplo fijo, adapta según tu lógica
+    val usuarioListo by viewModel.usuarioCargado.collectAsState()
     val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        viewModel.inicializar(nombre, password)
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -126,9 +131,9 @@ fun AgregarUI(
                             nombreProducto = nombreProducto,
                             codigoProducto = codigoProducto,
                             cantidad = cantidadInt,
-                            usuario_id = usuarioId
+                            usuario_id = null
                         )
-                        viewModel.guardarTV(producto)
+                        viewModel.guardarProd(producto)
                         Toast.makeText(context, "Producto guardado", Toast.LENGTH_SHORT).show()
                         // Limpiar campos si quieres:
                         nombreProducto = ""
@@ -138,6 +143,7 @@ fun AgregarUI(
                         Toast.makeText(context, "Completa todos los campos correctamente", Toast.LENGTH_SHORT).show()
                     }
                 },
+                enabled = usuarioListo,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),

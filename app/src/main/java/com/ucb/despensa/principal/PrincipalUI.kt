@@ -28,6 +28,8 @@ val textoTarjeta = Color(0xFF000000)
 
 @Composable
 fun PrincipalUI(
+    nombre: String,
+    password: String,
     viewModel: PrincipalViewModel = hiltViewModel(),
     onAgregarClick: () -> Unit,
     onEditarClick: () -> Unit,
@@ -35,7 +37,7 @@ fun PrincipalUI(
 ) {
     val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
-        viewModel.cargarProductos()
+        viewModel.inicializar(nombre, password)
     }
     Box(
         modifier = Modifier

@@ -26,7 +26,7 @@ class EliminarViewModel @Inject constructor(
 
     fun cargarProductos() {
         viewModelScope.launch {
-            val productos = obtenerProductos() // <-- uso del usecase con invoke
+            val productos = obtenerProductos(1) // <-- uso del usecase con invoke
             if (productos.isEmpty()) {
                 _stateD.value = PorductosStateD.NohayProductosD
             } else {

@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [ProductoGuardado::class,UsuarioGuardado::class], version = 1, exportSchema = false)
+@Database(entities = [ProductoGuardado::class,UsuarioGuardado::class], version = 2, exportSchema = false)
 abstract class AppRoomDatabase : RoomDatabase() {
     abstract fun prodDao(): IProductoGuardadoDao
     abstract fun userDao(): IUsuarioGuardadoDao
@@ -22,6 +22,7 @@ abstract class AppRoomDatabase : RoomDatabase() {
                     AppRoomDatabase::class.java,
                     "despensa_database"
                 )
+                    .fallbackToDestructiveMigration(true)
                     .build()
 
                 INSTANCE = instance

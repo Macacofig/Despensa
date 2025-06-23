@@ -24,7 +24,7 @@ val textoTarjeta = Color(0xFF000000)
 @Composable
 fun EditarUI(
     viewModel: EditarViewModel = hiltViewModel(),
-    //onBackClick: () -> Unit
+    onBackClick: () -> Unit
 ) {
     val state = viewModel.stateE.collectAsState()
 
@@ -113,6 +113,18 @@ fun EditarUI(
                 is EditarViewModel.ProductosStateE.NohayProductosE -> {
                     Text("No hay productos para mostrar", color = textoPrincipal)
                 }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {onBackClick()},
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00796B)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text("Volver a Productos", color = Color.White)
             }
         }
     }

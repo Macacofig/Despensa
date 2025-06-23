@@ -19,8 +19,8 @@ class ProductosGuardadosLocalDataSource (
         productoDAO.insert(dispositivo.toEntity())
         return true
     }
-    override suspend fun GetProds(): List<Producto> {
-        val entities = productoDAO.GetProductos()
+    override suspend fun GetProds(usuarioid: Int): List<Producto> {
+        val entities = productoDAO.GetProductos(usuarioid)
         return entities.map { it.toDomain() }
     }
 

@@ -10,8 +10,8 @@ interface IProductoGuardadoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(producto: ProductoGuardado)  // Cambiado a DispGuardado
 
-    @Query("SELECT * FROM productos_guardados")
-    suspend fun GetProductos(): List<ProductoGuardado>
+    @Query("SELECT * FROM productos_guardados WHERE usuario_id = :usuarioid")
+    suspend fun GetProductos(usuarioid: Int): List<ProductoGuardado>
 
     @Query("UPDATE productos_guardados SET cantidad = :nuevaCantidad WHERE codigoProducto = :codigo")
     suspend fun actualizarCantidadPorCodigo(codigo: String, nuevaCantidad: Int)

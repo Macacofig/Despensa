@@ -11,7 +11,9 @@ import com.ucb.usecases.ActualizarProducto
 import com.ucb.usecases.BuscarProductoCodigo
 import com.ucb.usecases.EliminarProducto
 import com.ucb.usecases.GuardarProducto
+import com.ucb.usecases.GuardarUsuario
 import com.ucb.usecases.ObtenerProductos
+import com.ucb.usecases.ObtenerUsuario
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -74,5 +76,16 @@ class AppModule {
     @Singleton
     fun provideEliminarProducto(repository: ProductosRepository): EliminarProducto {
         return EliminarProducto(repository)
+    }
+    @Provides
+    @Singleton
+    fun provideGuardarUsuario(repository: UsuariosRepository): GuardarUsuario {
+        return GuardarUsuario(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideObtenerUsuario(repository: UsuariosRepository): ObtenerUsuario {
+        return ObtenerUsuario(repository)
     }
 }

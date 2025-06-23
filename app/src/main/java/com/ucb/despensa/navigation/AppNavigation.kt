@@ -3,13 +3,18 @@ package com.ucb.despensa.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.ucb.despensa.agregar.AgregarUI
 import com.ucb.despensa.editar.EditarUI
 import com.ucb.despensa.eliminar.EliminarUI
+import com.ucb.despensa.intro.PrimeraUI
+import com.ucb.despensa.login.LoginUI
 import com.ucb.despensa.principal.PrincipalUI
+import com.ucb.despensa.registrar.RegistrarUI
 
 @Composable
 fun AppNavigation() {
@@ -17,38 +22,84 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = screen.PrincipalScreen.route,
+        startDestination = screen.PrimeraScreen.route,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },
         popExitTransition = { ExitTransition.None }
     )
     {
-        composable(screen.PrincipalScreen.route)
+        composable (screen.PrimeraScreen.route)
         {
-            PrincipalUI(
-                onAgregarClick = {
-                    navController.navigate(screen.AgregarScreen.route)
+
+            PrimeraUI(
+                onInicioSesionClick = {
+                    navController.navigate(screen.LoginScreen.route)
                 },
-                onEditarClick = {
-                    navController.navigate(screen.EditarScreen.route)
-                },
-                onEliminarClick = {
-                    navController.navigate(screen.EliminarScreen.route)
+                onRegistrarClick = {
+                    navController.navigate(screen.RegistrarScreen.route)
                 }
+
+            )
+        }
+        composable (screen.LoginScreen.route)
+        {
+            LoginUI(
+                navController = navController,
+                onBackClick = {
+                    navController.navigate(screen.PrimeraScreen.route)
+                }
+            )
+        }
+        composable (screen.RegistrarScreen.route)
+        {
+            RegistrarUI(
+                navController = navController,
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = screen.PrincipalScreen.route,
+            arguments = listOf(
+                navArgument("nombre") { type = NavType.StringType },
+                navArgument("password") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+            val password = backStackEntry.arguments?.getString("password") ?: ""
+
+            PrincipalUI(
+                nombre = nombre,
+                password = password,
+                onAgregarClick = {
+                    navController.navigate(screen.AgregarScreen.createRoute(nombre, password))
+                },
+                onEditarClick = { navController.navigate(screen.EditarScreen.route) },
+                onEliminarClick = { navController.navigate(screen.EliminarScreen.route) }
             )
         }
 
 
-        // Codigo para navegar hacia atras
-        composable(screen.AgregarScreen.route) {
+        composable(
+            route = screen.AgregarScreen.route, // "agregar/{nombre}/{password}"
+            arguments = listOf(
+                navArgument("nombre") { type = NavType.StringType },
+                navArgument("password") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+            val password = backStackEntry.arguments?.getString("password") ?: ""
+
             AgregarUI(
-                onBackClick = { navController.popBackStack() },
+                nombre = nombre,
+                password = password,
+                onBackClick = { navController.popBackStack() }
             )
         }
         composable(screen.EditarScreen.route) {
             EditarUI(
-                //onBackClick = { navController.popBackStack() },
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(screen.EliminarScreen.route) {

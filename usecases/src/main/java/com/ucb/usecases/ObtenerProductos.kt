@@ -6,5 +6,7 @@ import com.ucb.domain.Producto
 class ObtenerProductos(
     val repository: ProductosRepository
 ) {
-    suspend operator fun invoke():List<Producto> =repository.GetProds()
+    suspend operator fun invoke(usuarioId: Int): List<Producto> {
+        return repository.GetProds(usuarioId)
+    }
 }

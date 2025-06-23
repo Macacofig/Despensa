@@ -33,6 +33,7 @@ fun Usuario.toEntityU(): UsuarioGuardado {
 // UsuarioGuardado → Usuario
 fun UsuarioGuardado.toDomainU(): Usuario {
     return Usuario(
+        id = this.id,
         nombre = this.nombre,
         password = this.password
     )
