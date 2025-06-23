@@ -46,7 +46,7 @@ class util {
 
             // Crear la notificación
             val notification = NotificationCompat.Builder(context, "default_channel")
-                .setContentTitle("Estado de televisores")
+                .setContentTitle("Accion Realizada")
                 .setContentText(mensaje)
                 .setSmallIcon(android.R.drawable.ic_dialog_info) // Cambia el ícono si lo deseas
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

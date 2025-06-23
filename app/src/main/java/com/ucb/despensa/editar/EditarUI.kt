@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
+import com.ucb.despensa.service.util
 
 // Colores personalizados
 val fondoGeneral = Color(0xFFB2EBF2)
@@ -29,7 +31,7 @@ fun EditarUI(
     onBackClick: () -> Unit
 ) {
     val state = viewModel.stateE.collectAsState()
-
+    val context = LocalContext.current
     // Llamamos cargarProductos una sola vez al montar la UI
     LaunchedEffect(Unit) {
         viewModel.inicializar(nombre, password)
@@ -101,6 +103,7 @@ fun EditarUI(
                                     onClick = {
                                         val nuevaCantidad = cantidad.toIntOrNull() ?: producto.cantidad
                                         viewModel.actualizarCantidad(producto.codigoProducto, nuevaCantidad)
+                                        util.sendNotificatión(context, "Producto actualizado exitosamente.")
                                     },
                                     colors = ButtonDefaults.buttonColors(containerColor = fondoBoton),
                                     modifier = Modifier.fillMaxWidth()

@@ -29,8 +29,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ucb.despensa.service.util
 
 
 //colores
@@ -51,6 +53,7 @@ fun EliminarUI(
     LaunchedEffect(Unit) {
         viewModel.inicializar(nombre,password)
     }
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -116,6 +119,8 @@ fun EliminarUI(
                                     IconButton(
                                         onClick = {
                                             viewModel.eliminarProducto(producto.codigoProducto)
+                                            util.sendNotificatión(context, "Producto eliminado exitosamente.")
+
                                         }
                                     ) {
                                         Icon(
