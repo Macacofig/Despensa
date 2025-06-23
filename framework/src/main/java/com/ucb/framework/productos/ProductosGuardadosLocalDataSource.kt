@@ -33,8 +33,7 @@ class ProductosGuardadosLocalDataSource (
         return true
     }
 
-    override suspend fun obtenerProductoCodigo(codigoProducto: String): Boolean {
-        val count = productoDAO.findByCodigo(codigoProducto)
-        return count > 0
+    override suspend fun obtenerProductoCodigo(codigoProducto: String, usuarioid: Int): Boolean {
+        return productoDAO.findByCodigo(codigoProducto, usuarioid) > 0
     }
 }

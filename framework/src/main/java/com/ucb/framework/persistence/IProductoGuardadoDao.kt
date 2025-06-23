@@ -19,6 +19,6 @@ interface IProductoGuardadoDao {
     @Query("DELETE FROM productos_guardados WHERE codigoProducto = :codproducto")
     suspend fun DeleteProducto(codproducto: String)
 
-    @Query("SELECT COUNT(*) FROM productos_guardados WHERE codigoProducto = :codigoProducto")
-    suspend fun findByCodigo(codigoProducto: String): Int
+    @Query("SELECT COUNT(*) FROM productos_guardados WHERE codigoProducto = :codigoProducto and usuario_id = :usuarioid")
+    suspend fun findByCodigo(codigoProducto: String, usuarioid: Int): Int
 }

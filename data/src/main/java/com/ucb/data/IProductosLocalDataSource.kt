@@ -6,5 +6,5 @@ interface IProductosLocalDataSource {
     suspend fun GetProds(usuarioid: Int): List<Producto>
     suspend fun actualizarProducto(producto: Producto)
     suspend fun DeleteProd(codigoProducto: String): Boolean
-    suspend fun obtenerProductoCodigo(codigoProducto: String): Boolean
+    suspend fun obtenerProductoCodigo(codigoProducto: String, usuarioid: Int): Boolean
 }

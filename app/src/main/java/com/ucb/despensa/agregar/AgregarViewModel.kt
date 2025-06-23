@@ -19,6 +19,16 @@ class AgregarViewModel @Inject constructor(
     private val obtenerUsuario: ObtenerUsuario
 ): ViewModel() {
 
+    sealed class AgregarState {
+        object ProductoGuardado : AgregarState()
+        object ProductoYaExiste : AgregarState()
+        object Error : AgregarState()
+        object Idle : AgregarState()
+    }
+
+    private val _estado = MutableStateFlow<AgregarState>(AgregarState.Idle)
+    val estado: StateFlow<AgregarState> = _estado
+
     private var usuarioId: Int? = null
 
     private val _usuarioCargado = MutableStateFlow(false)
@@ -36,8 +46,20 @@ class AgregarViewModel @Inject constructor(
         viewModelScope.launch {
             usuarioId?.let { id ->
                 val prodConUsuario = producto.copy(usuario_id = id)
-                guardarProducto(prodConUsuario)
+                val Prodexiste = buscarProductoCodigo(prodConUsuario.codigoProducto, id)
+                if (!Prodexiste) {
+                    guardarProducto(prodConUsuario)
+                    _estado.value = AgregarState.ProductoGuardado
+                } else {
+                    _estado.value = AgregarState.ProductoYaExiste
+                }
+            } ?: run {
+                _estado.value = AgregarState.Error
             }
         }
+    }
+
+    fun reiniciarEstado() {
+        _estado.value = AgregarState.Idle
     }
 }

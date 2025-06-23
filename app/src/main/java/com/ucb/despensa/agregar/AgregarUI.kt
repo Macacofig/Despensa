@@ -53,10 +53,34 @@ fun AgregarUI(
     var codigoProducto by remember { mutableStateOf("") }
     var cantidad by remember { mutableStateOf("") }
     val usuarioListo by viewModel.usuarioCargado.collectAsState()
+
+    val estado by viewModel.estado.collectAsState()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.inicializar(nombre, password)
+    }
+
+    LaunchedEffect(estado) {
+        when (estado) {
+            is AgregarViewModel.AgregarState.ProductoGuardado -> {
+                util.sendNotificatión(context, "Producto agregado exitosamente.")
+                Toast.makeText(context, "Producto guardado", Toast.LENGTH_SHORT).show()
+                nombreProducto = ""
+                codigoProducto = ""
+                cantidad = ""
+                viewModel.reiniciarEstado()
+            }
+            is AgregarViewModel.AgregarState.ProductoYaExiste -> {
+                Toast.makeText(context, "El producto ya existe.", Toast.LENGTH_SHORT).show()
+                viewModel.reiniciarEstado()
+            }
+            is AgregarViewModel.AgregarState.Error -> {
+                Toast.makeText(context, "Ocurrió un error al guardar.", Toast.LENGTH_SHORT).show()
+                viewModel.reiniciarEstado()
+            }
+            else -> {}
+        }
     }
     Box(
         modifier = Modifier
@@ -128,12 +152,12 @@ fun AgregarUI(
                             usuario_id = null
                         )
                         viewModel.guardarProd(producto)
-                        util.sendNotificatión(context, "Producto agregado exitosamente.")
-                        Toast.makeText(context, "Producto guardado", Toast.LENGTH_SHORT).show()
-                        // Limpiar campos si quieres:
-                        nombreProducto = ""
-                        codigoProducto = ""
-                        cantidad = ""
+//                        util.sendNotificatión(context, "Producto agregado exitosamente.")
+//                        Toast.makeText(context, "Producto guardado", Toast.LENGTH_SHORT).show()
+//                        // Limpiar campos si quieres:
+//                        nombreProducto = ""
+//                        codigoProducto = ""
+//                        cantidad = ""
                     } else {
                         Toast.makeText(context, "Completa todos los campos correctamente", Toast.LENGTH_SHORT).show()
                     }
